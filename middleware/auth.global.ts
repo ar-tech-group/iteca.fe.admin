@@ -1,22 +1,12 @@
 export default defineNuxtRouteMiddleware((to, from) => {
-    const token = useCookie('token');
+    const token = useCookie('authToken');
     const localePath = useLocalePath();
 
-    if (to.path === '/login' || to.path === '/en/login') return;
-
-    if (token.value && to.path === '/login') {
+    if (token.value && (to.path === '/login' || to.path === '/en/login')) {
         return navigateTo(localePath('/'));
     }
 
-    if (token.value && to.path === '/en/login') {
-        return navigateTo(localePath('/'));
-    }
-
-    if (!token.value && to.path !== '/login') {
-        return navigateTo(localePath('/login'));
-    }
-
-    if (!token.value && to.path !== '/en/login') {
+    if (!token.value && to.path !== '/login' && to.path !== '/en/login') {
         return navigateTo(localePath('/login'));
     }
 });
