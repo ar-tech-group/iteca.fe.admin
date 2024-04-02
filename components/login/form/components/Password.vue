@@ -3,7 +3,7 @@ import { ref, computed, watch } from '#imports';
 import UiInput from '@/components/ui/Input.vue';
 import UiButton from '@/components/ui/Button.vue';
 
-const emit = defineEmits(['update-password']);
+const emit = defineEmits(['update-password', 'send-data']);
 
 const { t } = useI18n();
 
@@ -39,6 +39,7 @@ watch(value, (val) => {
             type="button"
             class="login-form-password__btn"
             :disabled="isDisabled"
+            @click="emit('send-data')"
         >
             {{ t('ui.login') }}
         </UiButton>

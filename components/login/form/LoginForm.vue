@@ -1,12 +1,15 @@
 <script lang="ts" setup>
-import { ref, computed } from '#imports';
+import { ref, computed, useRouter } from '#imports';
+import { authenticate } from '@/api/auth';
+import { login } from '@/helpers/auth';
 import { loginFormViewState } from '@/config/login';
 import LoginFormEmail from '@/components/login/form/components/Email.vue';
 import LoginFormPassword from '@/components/login/form/components/Password.vue';
 
-const viewForm = ref<number>(loginFormViewState.EMAIL);
 const email = ref<string>('');
 const password = ref<string>('');
+const isLoading = ref<boolean>(false);
+const viewForm = ref<number>(loginFormViewState.EMAIL);
 
 const isEmail = computed(() => viewForm.value === loginFormViewState.EMAIL);
 
@@ -34,6 +37,21 @@ const toggleFormView = (value: number) => {
 
     viewForm.value = value;
 };
+
+/**
+ * Отправить данные на сервер
+ */
+const send = async () => {
+    isLoading.value = true;
+
+    const res = await authenticate(email.value, password.value);
+
+    if (res) {
+        isLoading.value = false;
+
+        login(res.access_token);
+    }
+};
 </script>
 
 <template>
@@ -50,6 +68,7 @@ const toggleFormView = (value: number) => {
         <LoginFormPassword
             v-else
             @update-password="updatePassword"
+            @send-data="send"
         />
     </form>
 </template>
