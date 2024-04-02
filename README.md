@@ -1,5 +1,5 @@
-# Frontend Iteca.Admin.Fe
-Для более подробной информации смотреть [документацию NextJs](https://nextjs.org/).
+# Frontend Iteca Admin FE
+Для более подробной информации смотреть [документацию Nuxt 3](https://nuxt.com/docs/getting-started/introduction).
 
 ## Настройка проекта
 1. Установите [pnpm](https://pnpm.io/installation)
@@ -22,10 +22,5 @@ pnpm build
 
 ### Посмотреть локально production build:
 ```bash
-pnpm start
-```
-
-### Выполнить линтинг проекта
-```bash
-pnpm lint
+pnpm preview
 ```

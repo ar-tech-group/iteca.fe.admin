@@ -1,30 +1,37 @@
-module.exports = {
+module.exports =  {
     root: true,
-    env: {
+    env:  {
         browser: true,
-        es2021: true,
-        node: true,
+        es2021:  true,
+        node:    true
     },
     extends: [
-        "next/core-web-vitals",
+        'plugin:vue/vue3-essential',
+        '@vue/typescript/recommended',
     ],
     plugins: [
         'import-newlines',
     ],
     parserOptions: {
         tsconfigRootDir: __dirname,
-        ecmaVersion: 2021,
+        ecmaVersion:     2021,
     },
     rules: {
-        'no-console':              process.env.NODE_ENV === 'production' ? 'warn' : 'off',
-        'no-debugger':             process.env.NODE_ENV === 'production' ? 'warn' : 'off',
-        'semi':                    ['error', 'always'],
-        'quotes':                  ['error', 'single'],
-        'key-spacing':             [
+        'no-console':  process.env.NODE_ENV === 'production' ? 'warn' : 'off',
+        'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
+        'semi':        ['error', 'always'],
+        'quotes':      ['error', 'single'],
+        'key-spacing': [
             'error',
             {
-                "align": "value"
+                'align': 'value'
             }
+        ],
+        'vue/max-attributes-per-line': [
+            'error',
+            {
+                singleline: 1,
+            },
         ],
         'import-newlines/enforce': [
             'error',
@@ -34,5 +41,28 @@ module.exports = {
             },
         ],
         'import/prefer-default-export': ['off'],
-    }
+    },
+    overrides: [
+        {
+            files: [
+                '**/*.{ts,tsx,vue}',
+            ],
+            rules: {
+                'no-undef':             'off',
+                'import/no-unresolved': 'off',
+            },
+        },
+        {
+            files: [
+                '**/*.vue',
+            ],
+            rules: {
+                'vue/multi-word-component-names': 'off',
+            },
+        },
+    ],
+    globals: {
+        defineProps: 'readonly',
+        defineEmits: 'readonly',
+    },
 };
