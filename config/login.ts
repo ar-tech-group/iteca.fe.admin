@@ -4,6 +4,7 @@
 export const loginViewState = {
     PREVIEW: 'preview',
     FORM:    'form',
+    RESET:   'reset'
 };
 
 /**
