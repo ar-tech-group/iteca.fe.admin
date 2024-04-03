@@ -1,5 +1,8 @@
 <script lang="ts" setup>
+import { loginViewState } from '@/config/login';
 import UiButton from '@/components/ui/Button.vue';
+
+const emit = defineEmits(['change-view']);
 
 const { t } = useI18n();
 </script>
@@ -13,6 +16,7 @@ const { t } = useI18n();
         <UiButton
             type="button"
             class="login-preview__btn"
+            @click="emit('change-view', loginViewState.FORM)"
         >
             {{ t('ui.continue') }}
         </UiButton>
