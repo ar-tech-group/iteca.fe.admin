@@ -1,9 +1,11 @@
 <script lang="ts" setup>
-import { ref } from '#imports';
+import { ref, useI18n, useSwitchLocalePath } from '#imports';
+import type { LocaleObject } from '@nuxtjs/i18n';
 import { localesName } from '@/config/locales';
 import UiIcon from '@/components/ui/Icon.vue';
 
-const { locale } = useI18n();
+const { locales, locale } = useI18n();
+const switchLocalePath = useSwitchLocalePath();
 
 const isActive = ref<boolean>(false);
 
@@ -59,6 +61,32 @@ const toggleActive = (value: boolean) => {
                 :class="{ 'lang-select__label-icon--active': isActive }"
             />
         </label>
+
+        <transition name="fade">
+            <ul
+                v-if="isActive"
+                class="lang-select-suggests"
+            >
+                <nuxt-link
+                    v-for="item in (locales as LocaleObject[])"
+                    v-slot="{ href, navigate }"
+                    :key="item.code"
+                    :to="switchLocalePath(item.code) || '/'"
+                    custom
+                >
+                    <li class="lang-select-suggests__item">
+                        <a
+                            :href="href"
+                            class="lang-select-suggests__item-link"
+                            :class="{ 'lang-select-suggests__item-link--active': item.code === locale }"
+                            @click="navigate"
+                        >
+                            {{ item.name }}
+                        </a>
+                    </li>
+                </nuxt-link>
+            </ul>
+        </transition>
     </div>
 </template>
 
@@ -68,6 +96,8 @@ const toggleActive = (value: boolean) => {
         display: flex;
         align-items: center;
         justify-content: space-between;
+        width: 100%;
+        min-width: 120px;
         font-size: 16px;
         font-weight: var(--f-weight-regular);
         line-height: 24px;
@@ -116,6 +146,31 @@ const toggleActive = (value: boolean) => {
 
     &__inp {
         @include visually-hidden();
+    }
+}
+
+.lang-select-suggests {
+    @include list-reset();
+
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    z-index: 99;
+
+    &__item-link {
+        display: block;
+        padding: 8px 0;
+        text-decoration: none;
+        color: var(--black-primary);
+        transition: color 0.5s ease;
+
+        &:hover,
+        &--active {
+            color: var(--orange);
+        }
     }
 }
 </style>
