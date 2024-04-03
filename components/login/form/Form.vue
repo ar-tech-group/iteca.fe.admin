@@ -1,9 +1,11 @@
 <script lang="ts" setup>
 import { ref, computed } from '#imports';
-import { loginFormViewState } from '@/config/login';
+import { loginViewState, loginFormViewState } from '@/config/login';
 import UiButton from '@/components/ui/Button.vue';
 import UiInput from '@/components/ui/Input.vue';
 import UiIcon from '@/components/ui/Icon.vue';
+
+const emit = defineEmits(['change-view']);
 
 const { t } = useI18n();
 
@@ -117,6 +119,7 @@ const send = () => {
                 type="button"
                 theme="transparent"
                 class="login-form__btn--reset"
+                @click="emit('change-view', loginViewState.RESET)"
             >
                 {{ t('ui.forgot_password') }}
             </UiButton>

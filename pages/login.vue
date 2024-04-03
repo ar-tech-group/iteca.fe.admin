@@ -4,6 +4,7 @@ import { loginViewState } from '@/config/login';
 import LangSelect from '@/components/common/LangSelect.vue';
 import LoginPreview from '@/components/login/Preview.vue';
 import LoginForm from '@/components/login/form/Form.vue';
+import LoginFormReset from '@/components/login/form/Reset.vue';
 
 definePageMeta({
     layout: 'empty',
@@ -12,6 +13,7 @@ definePageMeta({
 const currView = ref<string>(loginViewState.PREVIEW);
 
 const isPreview = computed(() => currView.value === loginViewState.PREVIEW);
+const isForm = computed(() => currView.value === loginViewState.FORM);
 
 /**
  * Сменить текущий вид
@@ -19,7 +21,15 @@ const isPreview = computed(() => currView.value === loginViewState.PREVIEW);
  * @param {string} value
  */
 const changeCurrentView = (value: string) => {
+    console.log('value', value);
+
     if (currView.value === value) return;
+
+    if (value === loginViewState.FORM) {
+        currView.value = loginViewState.FORM;
+
+        return;
+    }
 
     currView.value = value;
 };
@@ -45,6 +55,11 @@ const changeCurrentView = (value: string) => {
             />
 
             <LoginForm
+                v-else-if="isForm"
+                @change-view="changeCurrentView"
+            />
+
+            <LoginFormReset
                 v-else
             />
         </div>
