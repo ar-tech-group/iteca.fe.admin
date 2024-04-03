@@ -6,7 +6,7 @@ withDefaults(defineProps<{
     type: string;
     label?: string;
     theme?: ButtonThemeType;
-    disabled?: string;
+    disabled?: boolean;
 }>(), {
     type: 'button',
 });
@@ -86,6 +86,16 @@ const component = computed(() => {
         &:hover,
         &:focus {
             color: var(--gray);
+        }
+    }
+
+    &--transparent {
+        background-color: transparent;
+        color: var(--orange);
+
+        &:hover {
+            background-color: transparent;
+            color: var(--orange-light);
         }
     }
 }

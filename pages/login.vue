@@ -1,10 +1,28 @@
 <script lang="ts" setup>
+import { ref, computed } from '#imports';
+import { loginViewState } from '@/config/login';
 import LangSelect from '@/components/common/LangSelect.vue';
 import LoginPreview from '@/components/login/Preview.vue';
+import LoginForm from '@/components/login/form/Form.vue';
 
 definePageMeta({
     layout: 'empty',
 });
+
+const currView = ref<string>(loginViewState.PREVIEW);
+
+const isPreview = computed(() => currView.value === loginViewState.PREVIEW);
+
+/**
+ * Сменить текущий вид
+ *
+ * @param {string} value
+ */
+const changeCurrentView = (value: string) => {
+    if (currView.value === value) return;
+
+    currView.value = value;
+};
 </script>
 
 <template>
@@ -21,7 +39,14 @@ definePageMeta({
                 >
             </div>
 
-            <LoginPreview />
+            <LoginPreview
+                v-if="isPreview"
+                @change-view="changeCurrentView"
+            />
+
+            <LoginForm
+                v-else
+            />
         </div>
 
         <a
