@@ -25,6 +25,7 @@ const toggleActive = (value: boolean) => {
         <label
             for="lang-select"
             class="lang-select__label"
+            :class="{ 'lang-select__label--desktop': true }"
         >
             {{ localesName[locale] }}
 
@@ -42,6 +43,21 @@ const toggleActive = (value: boolean) => {
                 @focus="toggleActive(true)"
                 @blur="toggleActive(false)"
             >
+        </label>
+
+        <label
+            for="lang-select"
+            class="lang-select__label"
+            :class="{ 'lang-select__label--mobile': true }"
+            @click="isActive = !isActive"
+        >
+            {{ localesName[locale] }}
+
+            <UiIcon
+                name="icon-arrow-down"
+                class="lang-select__label-icon"
+                :class="{ 'lang-select__label-icon--active': isActive }"
+            />
         </label>
     </div>
 </template>
@@ -64,6 +80,22 @@ const toggleActive = (value: boolean) => {
 
             .lang-select__label-icon svg {
                 fill: var(--orange);
+            }
+        }
+
+        &--desktop {
+            display: none;
+
+            @media (min-width: 1200px) {
+                display: flex;
+            }
+        }
+
+        &--mobile {
+            display: none;
+
+            @media (max-width: 1200px) {
+                display: flex;
             }
         }
     }
