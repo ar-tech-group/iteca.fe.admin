@@ -18,7 +18,10 @@ const toggleActive = (value: boolean) => {
 </script>
 
 <template>
-    <div class="lang-select">
+    <div
+        tabindex="0"
+        class="lang-select"
+    >
         <label
             for="lang-select"
             class="lang-select__label"
