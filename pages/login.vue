@@ -10,6 +10,8 @@ definePageMeta({
     layout: 'empty',
 });
 
+const url = process.env.API_URL;
+
 const currView = ref<string>(loginViewState.PREVIEW);
 
 const isPreview = computed(() => currView.value === loginViewState.PREVIEW);
@@ -46,6 +48,8 @@ const changeCurrentView = (value: string) => {
                     alt=""
                 >
             </div>
+
+            {{ url }}
 
             <LoginPreview
                 v-if="isPreview"
