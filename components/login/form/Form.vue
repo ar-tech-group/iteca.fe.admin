@@ -1,6 +1,8 @@
 <script lang="ts" setup>
-import { ref, computed } from '#imports';
+import { ref, computed, useRouter } from '#imports';
+import { login } from '@/helpers/auth';
 import { loginViewState, loginFormViewState } from '@/config/login';
+import type { AuthData } from '@/types/Auth';
 import UiButton from '@/components/ui/Button.vue';
 import UiInput from '@/components/ui/Input.vue';
 import UiIcon from '@/components/ui/Icon.vue';
@@ -8,9 +10,13 @@ import UiIcon from '@/components/ui/Icon.vue';
 const emit = defineEmits(['change-view']);
 
 const { t } = useI18n();
+const localePath = useLocalePath();
+
+const router = useRouter();
 
 const email = ref<string>('');
 const password = ref<string>('');
+const isLoading = ref<boolean>(false);
 const currentView = ref<string>(loginFormViewState.EMAIL);
 const isShowPassword = ref<boolean>(false);
 
@@ -18,7 +24,7 @@ const isEmail = computed(() => currentView.value === loginFormViewState.EMAIL);
 const passwordInputType = computed(() => isShowPassword.value ? 'text' : 'password');
 
 /**
- * Сменить текущий вид формы
+ * Сменить текущий вид формы.
  *
  * @param {string} value
  */
@@ -29,25 +35,50 @@ const changeCurrentView = (value: string) => {
 };
 
 /**
- * Переключить видимость пароля
+ * Переключить видимость пароля.
  */
 const toggleShowPassword = () => {
     isShowPassword.value = !isShowPassword.value;
 };
 
 /**
- * Отправить данные на сервер
+ * Отправить данные на сервер.
  */
-const send = () => {
-    console.log('email', email.value);
-    console.log('password', password.value);
+const sendData = () => useFetch('/api/login/', {
+    method: 'POST',
+    body:   {
+        apiKey: '0KHQtdC60YDQtdGC0L3Ri9C50JrQu9GO0YfQlNC70Y/QotC10YXQl9Cw0LrQsNC30LA=',
+        login:  email.value,
+        pass:   password.value,
+    }
+});
+
+/**
+ * Обработчик при отправки фрормы.
+ */
+const handleSubmit = async () => {
+    try {
+        isLoading.value = true;
+
+        const { data } = await sendData();
+
+        const parsedData: AuthData = JSON.parse(String(data.value));
+
+        login(parsedData.token);
+
+        await router.replace({path: localePath('/')});
+    } catch (error) {
+        console.warn(error);
+    } finally {
+        isLoading.value = false;
+    }
 };
 </script>
 
 <template>
     <form
         class="login-form"
-        @submit.prevent="send"
+        @submit.prevent="handleSubmit"
     >
         <div
             v-if="isEmail"
@@ -109,8 +140,9 @@ const send = () => {
 
             <UiButton
                 type="submit"
-                class="login-form__btn login-form__btn--submit"
                 :disabled="password.length <= 0"
+                :is-loading="isLoading"
+                class="login-form__btn login-form__btn--submit"
             >
                 {{ t('ui.sign_in') }}
             </UiButton>
