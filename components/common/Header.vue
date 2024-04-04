@@ -31,6 +31,7 @@ import NotifSelect from '@/components/common/NotifSelect.vue';
     grid-area: header;
     padding: 24px;
     background-color: var(--white);
+    z-index: 99;
 
     &__lang-select {
         position: relative;
@@ -38,6 +39,7 @@ import NotifSelect from '@/components/common/NotifSelect.vue';
 
         .lang-select-suggests {
             padding: 8px;
+            border-radius: var(--radius);
             background-color: var(--white);
             box-shadow: 0 2px 5px 0 rgba(28, 25, 24, 0.08);
         }

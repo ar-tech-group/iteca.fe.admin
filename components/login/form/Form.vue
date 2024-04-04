@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { ref, computed, useRouter } from '#imports';
 import { login } from '@/helpers/auth';
+import { encode } from '@/helpers/base64';
 import { loginViewState, loginFormViewState } from '@/config/login';
 import type { AuthData } from '@/types/Auth';
 import UiButton from '@/components/ui/Button.vue';
@@ -48,8 +49,8 @@ const sendData = () => useFetch('/api/login/', {
     method: 'POST',
     body:   {
         apiKey: '0KHQtdC60YDQtdGC0L3Ri9C50JrQu9GO0YfQlNC70Y/QotC10YXQl9Cw0LrQsNC30LA=',
-        login:  email.value,
-        pass:   password.value,
+        login:  encode(email.value),
+        pass:   encode(password.value),
     }
 });
 
