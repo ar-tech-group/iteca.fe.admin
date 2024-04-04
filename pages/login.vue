@@ -21,8 +21,6 @@ const isForm = computed(() => currView.value === loginViewState.FORM);
  * @param {string} value
  */
 const changeCurrentView = (value: string) => {
-    console.log('value', value);
-
     if (currView.value === value) return;
 
     if (value === loginViewState.FORM) {
