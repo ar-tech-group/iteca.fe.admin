@@ -15,7 +15,8 @@
         "sign_in": "Войти",
         "forgot_password": "Забыли пароль?",
         "send": "Отправить",
-        "profile": "Профиль"
+        "profile": "Профиль",
+        "log_out": "Выйти"
     },
     "menu": {
         "home": "Главная",
