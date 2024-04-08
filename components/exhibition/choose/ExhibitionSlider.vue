@@ -11,12 +11,23 @@ defineProps<{
 const emit = defineEmits(['click-to-slide']);
 
 const options = computed(() => ({
-    type:       'loop',
-    perPage:    4,
-    perView:    1,
-    rewind:     true,
-    pagination: false,
-    gap:        20,
+    type:        'loop',
+    perPage:     4,
+    perMove:     1,
+    rewind:      true,
+    pagination:  false,
+    gap:         20,
+    breakpoints: {
+        1200: {
+            perPage: 3,
+        },
+        820: {
+            perPage: 2,
+        },
+        525: {
+            perPage: 1,
+        }
+    }
 }));
 </script>
 
