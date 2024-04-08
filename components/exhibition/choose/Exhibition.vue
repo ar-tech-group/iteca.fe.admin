@@ -1,7 +1,8 @@
 <script lang="ts" setup>
-import { ref, useRouter } from '#imports';
+import { ref, useRouter, onMounted } from '#imports';
 import { useGlobalStore } from '@/store/global';
-import { getListPastExhibitions } from '@/api/exhibition';
+import { encode } from '@/helpers/base64';
+import { TOKEN_KEY, API_KEY } from '@/config/constants';
 import type { ExhibitionItemType } from '@/types/Exhibition';
 import ExhibitionSlider from '@/components/exhibition/choose/ExhibitionSlider.vue';
 import ExhibitionListSkeleton from '@/components/exhibition/choose/ExhibitionListSkeleton.vue';
@@ -17,15 +18,30 @@ const isLoading = ref<boolean>(false);
 const list = ref<ExhibitionItemType[]>([]);
 
 /**
- * Получить список выставок.
+ * Отправить данные на сервер для получения списка выставок.
  */
-const getPastExhibition = async () => {
+const sendData = () => {
+    return useFetch('/api/pre-exhibition/', {
+        method: 'POST',
+        body:   {
+            apiKey:      API_KEY,
+            token:       useCookie(TOKEN_KEY).value,
+            companycode: encode(String(globalStore.company_code)),
+            lang:        globalStore.lang,
+        },
+    });
+};
+
+/**
+ * Получить список выставок в которых участвовал пользователь.
+ */
+const getPastExhibitions = async () => {
     try {
         isLoading.value = true;
 
-        const res = await getListPastExhibitions(String(globalStore.company_code));
+        const { data } = await sendData();
 
-        const { ExhibList } = JSON.parse(String(res));
+        const { ExhibList } = JSON.parse(String(data.value));
 
         list.value = ExhibList;
     } catch (error) {
@@ -35,14 +51,16 @@ const getPastExhibition = async () => {
     }
 };
 
-getPastExhibition();
-
 /**
  * Обработчик клика по слайду.
  */
 const handleClickSlide = () => {
     router.replace({ path: localePath('/')});
 };
+
+onMounted(() => {
+    getPastExhibitions();
+});
 </script>
 
 <template>
@@ -52,7 +70,7 @@ const handleClickSlide = () => {
         </h2>
 
         <ExhibitionListSkeleton
-            v-if="isLoading && list.length <= 0"
+            v-if="isLoading || !list.length"
         />
 
         <ExhibitionSlider
