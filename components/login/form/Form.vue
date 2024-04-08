@@ -1,9 +1,9 @@
 <script lang="ts" setup>
 import { ref, computed, useRouter } from '#imports';
+import { authenticate } from '@/api/auth';
+import { useGlobalStore } from '@/store/global';
 import { login } from '@/helpers/auth';
-import { encode } from '@/helpers/base64';
 import { loginViewState, loginFormViewState } from '@/config/login';
-import type { AuthData } from '@/types/Auth';
 import UiButton from '@/components/ui/Button.vue';
 import UiInput from '@/components/ui/Input.vue';
 import UiIcon from '@/components/ui/Icon.vue';
@@ -14,6 +14,8 @@ const { t } = useI18n();
 const localePath = useLocalePath();
 
 const router = useRouter();
+
+const globalStore = useGlobalStore();
 
 const email = ref<string>('');
 const password = ref<string>('');
@@ -43,31 +45,27 @@ const toggleShowPassword = () => {
 };
 
 /**
- * Отправить данные на сервер.
- */
-const sendData = () => useFetch('/api/login/', {
-    method: 'POST',
-    body:   {
-        apiKey: '0KHQtdC60YDQtdGC0L3Ri9C50JrQu9GO0YfQlNC70Y/QotC10YXQl9Cw0LrQsNC30LA=',
-        login:  encode(email.value),
-        pass:   encode(password.value),
-    }
-});
-
-/**
  * Обработчик при отправки фрормы.
  */
 const handleSubmit = async () => {
     try {
         isLoading.value = true;
 
-        const { data } = await sendData();
+        const res = await authenticate(email.value, password.value);
 
-        const parsedData: AuthData = JSON.parse(String(data.value));
+        const data = JSON.parse(String(res));
 
-        login(parsedData.token);
+        login(data.token);
 
-        await router.replace({path: localePath('/')});
+        globalStore.setCompanyCode(data.companycode);
+
+        if (data.exhibitioncode.length <= 0) {
+            await router.replace({ path: localePath('/exhibition')});
+
+            return;
+        }
+
+        await router.replace({ path: localePath('/') });
     } catch (error) {
         console.warn(error);
     } finally {
