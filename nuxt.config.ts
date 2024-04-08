@@ -13,6 +13,7 @@ export default defineNuxtConfig({
     },
     css: [
         '@/assets/scss/_global.scss',
+        '@splidejs/vue-splide/css',
     ],
     vite: {
         css: {
@@ -34,6 +35,7 @@ export default defineNuxtConfig({
         },
     },
     modules: [
+        '@pinia/nuxt',
         [
             '@nuxtjs/i18n',
             {

@@ -12,4 +12,9 @@ export const COLOR_MAP = new Map([
 /**
  * Храним наимнование ключа токена.
  */
-export const TOKEN_KEY = 'authToken';
+export const TOKEN_KEY: string = 'authToken';
+
+/**
+ * Храним api ключ для
+ */
+export const API_KEY: string = '0KHQtdC60YDQtdGC0L3Ri9C50JrQu9GO0YfQlNC70Y/QotC10YXQl9Cw0LrQsNC30LA=';
