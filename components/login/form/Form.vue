@@ -1,9 +1,11 @@
 <script lang="ts" setup>
 import { ref, computed, useRouter } from '#imports';
-import { authenticate } from '@/api/auth';
 import { useGlobalStore } from '@/store/global';
 import { login } from '@/helpers/auth';
+import { encode } from '@/helpers/base64';
 import { loginViewState, loginFormViewState } from '@/config/login';
+import { API_KEY } from '@/config/constants';
+import type { AuthData } from '@/types/Auth';
 import UiButton from '@/components/ui/Button.vue';
 import UiInput from '@/components/ui/Input.vue';
 import UiIcon from '@/components/ui/Icon.vue';
@@ -45,22 +47,36 @@ const toggleShowPassword = () => {
 };
 
 /**
+ * Отправляет данные на бэк.
+ */
+const sendData = () => {
+    return useFetch('/api/login/', {
+        method: 'POST',
+        body:   {
+            apiKey: API_KEY,
+            login:  encode(email.value),
+            pass:   encode(password.value)
+        }
+    });
+};
+
+/**
  * Обработчик при отправки фрормы.
  */
 const handleSubmit = async () => {
     try {
         isLoading.value = true;
 
-        const res = await authenticate(email.value, password.value);
+        const { data } = await sendData();
 
-        const data = JSON.parse(String(res));
+        const parsedData: AuthData = JSON.parse(String(data.value));
 
-        login(data.token);
+        login(parsedData.token);
 
-        globalStore.setCompanyCode(data.companycode);
+        globalStore.setCompanyCode(parsedData.companycode);
 
-        if (data.exhibitioncode.length <= 0) {
-            await router.replace({ path: localePath('/exhibition')});
+        if (parsedData.exhibitioncode.length <= 0) {
+            await router.replace({ path: localePath('/exhibition') });
 
             return;
         }
